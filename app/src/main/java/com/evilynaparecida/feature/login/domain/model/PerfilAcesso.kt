@@ -1,0 +1,16 @@
+package com.evilynaparecida.feature.login.domain.model
+
+enum class PerfilAcesso {
+    ALUNO,
+    PROFESSOR;
+
+    companion object {
+        fun fromApi(value: String): PerfilAcesso {
+            return when (value.trim().uppercase()) {
+                "ALUNO" -> ALUNO
+                "PROFESSOR" -> PROFESSOR
+                else -> throw IllegalArgumentException("Perfil de acesso inválido: $value")
+            }
+        }
+    }
+}

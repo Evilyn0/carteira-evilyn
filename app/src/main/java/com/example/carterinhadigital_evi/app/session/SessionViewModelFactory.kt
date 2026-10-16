@@ -1,0 +1,20 @@
+package com.example.carterinhadigital_evi.app.session
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.example.carterinhadigital_evi.core.auth.SessionTokenStore
+
+class SessionViewModelFactory(
+    private val sessionTokenStore : SessionTokenStore
+) : ViewModelProvider.Factory {
+
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(_root_ide_package_.com.example.carterinhadigital_evi.app.session.SessionViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return _root_ide_package_.com.example.carterinhadigital_evi.app.session.SessionViewModel(
+                sessionTokenStore = sessionTokenStore
+            ) as T
+        }
+        throw IllegalArgumentException("ViewModel desconhecido: ${modelClass.name}")
+    }
+}
