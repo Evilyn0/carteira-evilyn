@@ -1,6 +1,5 @@
 package com.example.carterinhadigital_evi.feature.login.presentation.screen
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,13 +10,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,39 +30,44 @@ import com.example.carterinhadigital_evi.feature.login.presentation.LoginUiState
 fun LoginContent(
     modifier: Modifier = Modifier,
     uiState: LoginUiState,
-    onEvent:(LoginEvent)-> Unit
+    onEvent: (LoginEvent) -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(
-            10.dp,
+            16.dp,
             Alignment.CenterVertically
         ),
-        modifier =modifier
+        modifier = modifier
     ) {
         Text(
             text = "Login",
-            fontSize = 30.sp,
-            fontWeight = FontWeight.Bold
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
         )
-        TextField(
+
+        OutlinedTextField(
             value = uiState.usuario,
             onValueChange = {
                 onEvent(LoginEvent.OnUsuarioChange(it))
             },
             isError = uiState.credentialError,
-            label = {Text(text = "Usuario")
-            }
-
+            label = { Text(text = "Usuário") },
+            modifier = Modifier.fillMaxWidth(0.85f)
         )
-        TextField(
+
+        OutlinedTextField(
             value = uiState.senha,
             onValueChange = {
                 onEvent(LoginEvent.OnSenhaChange(it))
             },
             isError = uiState.credentialError,
-            label = {Text(text = "Senha")}
+            label = { Text(text = "Senha") },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth(0.85f)
         )
+
         uiState.errorMessage?.let { error ->
             Text(
                 text = error,
@@ -71,23 +76,22 @@ fun LoginContent(
                 modifier = Modifier.fillMaxWidth(0.85f)
             )
         }
+
         Button(
             onClick = {
-               onEvent(LoginEvent.OnEntrarClick)
+                onEvent(LoginEvent.OnEntrarClick)
             },
             enabled = !uiState.isLoading,
-            shape = RoundedCornerShape(size = 4.dp),
-            border = BorderStroke(
-                width = 2.dp,
-                color = Color.Black
-            ),
+            shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(
-                contentColor = MaterialTheme.colorScheme.secondary
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             ),
             modifier = Modifier
-                .fillMaxWidth(.6f)
+                .fillMaxWidth(0.85f)
+                .height(50.dp)
         ) {
-            if(uiState.isLoading){
+            if (uiState.isLoading) {
                 LinearProgressIndicator(
                     modifier = Modifier
                         .fillMaxWidth(0.45f)
@@ -95,10 +99,12 @@ fun LoginContent(
                     color = Color.White,
                     trackColor = Color.White.copy(alpha = 0.35f)
                 )
-            }else{
+            } else {
                 Text(
                     "Entrar",
-                    color = Color.White,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
                 )
             }
         }

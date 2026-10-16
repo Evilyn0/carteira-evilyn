@@ -9,8 +9,14 @@ import com.example.carterinhadigital_evi.feature.login.data.remote.service.AuthA
 import com.example.carterinhadigital_evi.feature.login.data.repository.ApiLoginRepositoryImpl
 import com.example.carterinhadigital_evi.feature.login.data.repository.FakeAuthRepository
 import com.example.carterinhadigital_evi.feature.login.domain.repository.LoginRepository
+import com.example.carterinhadigital_evi.feature.professor.turmas.data.remote.service.TurmaApi
+import com.example.carterinhadigital_evi.feature.professor.turmas.data.repository.ApiTurmaRepositoryImpl
+import com.example.carterinhadigital_evi.feature.professor.turmas.domain.repository.TurmaRepository
+import com.example.carterinhadigital_evi.feature.professor.unidadescurriculares.data.remote.service.UnidadeCurricularProfessorApi
+import com.example.carterinhadigital_evi.feature.professor.unidadescurriculares.data.repository.ApiUnidadeCurricularProfessorRepositoryImpl
+import com.example.carterinhadigital_evi.feature.professor.unidadescurriculares.domain.repository.UnidadeCurricularProfessorRepository
 
-class DefaultAppContainer : com.example.carterinhadigital_evi.app.di.AppContainer {
+class DefaultAppContainer : AppContainer {
     override val sessionTokenStore: SessionTokenStore = SessionTokenStore()
     private val networkClient = NetworkClient(
         baseUrl = BASE_URL,
@@ -25,15 +31,32 @@ class DefaultAppContainer : com.example.carterinhadigital_evi.app.di.AppContaine
         networkClient.createAuthenticated(UnidadeCurricularApi::class.java)
     }
 
+    private val turmaApi: TurmaApi by lazy {
+        networkClient.createAuthenticated(TurmaApi::class.java)
+    }
+
+    private val unidadeCurricularProfessorApi: UnidadeCurricularProfessorApi by lazy {
+        networkClient.createAuthenticated(UnidadeCurricularProfessorApi::class.java)
+    }
+
     override val loginRepository: LoginRepository by lazy {
-        if (_root_ide_package_.com.example.carterinhadigital_evi.app.di.DefaultAppContainer.Companion.USE_FAKE_LOGIN_REPOSITORY) {
+        if (USE_FAKE_LOGIN_REPOSITORY) {
             FakeAuthRepository()
         } else {
             ApiLoginRepositoryImpl(api = authApi)
         }
     }
+
     override val unidadeCurricularRepository: UnidadeCurricularRepository by lazy {
         ApiUnidadeCurricularRepositoryImpl(api = unidadeCurricularApi)
+    }
+
+    override val turmaRepository: TurmaRepository by lazy {
+        ApiTurmaRepositoryImpl(api = turmaApi)
+    }
+
+    override val unidadeCurricularProfessorRepository: UnidadeCurricularProfessorRepository by lazy {
+        ApiUnidadeCurricularProfessorRepositoryImpl(api = unidadeCurricularProfessorApi)
     }
 
     companion object {

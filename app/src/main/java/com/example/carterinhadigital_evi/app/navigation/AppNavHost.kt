@@ -18,23 +18,23 @@ fun AppNavHost(
     navController: NavHostController,
     darkTheme: Boolean,
     onDarkThemeChange: (Boolean) -> Unit,
-    container: com.example.carterinhadigital_evi.app.di.AppContainer
+    container: AppContainer
 ) {
 
     val sessionFactory = remember(container.sessionTokenStore) {
-        _root_ide_package_.com.example.carterinhadigital_evi.app.session.SessionViewModelFactory(
+        SessionViewModelFactory(
             sessionTokenStore = container.sessionTokenStore
         )
     }
 
-    val sessionViewModel: com.example.carterinhadigital_evi.app.session.SessionViewModel = viewModel(
+    val sessionViewModel: SessionViewModel = viewModel(
         factory = sessionFactory
     )
 
     fun graphFor(perfil: PerfilAcesso): String {
         return when (perfil) {
-            PerfilAcesso.ALUNO -> _root_ide_package_.com.example.carterinhadigital_evi.app.navigation.GraphRoutes.ALUNO
-            PerfilAcesso.PROFESSOR -> _root_ide_package_.com.example.carterinhadigital_evi.app.navigation.GraphRoutes.PROFESSOR
+            PerfilAcesso.ALUNO -> GraphRoutes.ALUNO
+            PerfilAcesso.PROFESSOR -> GraphRoutes.PROFESSOR
         }
     }
 
@@ -53,14 +53,14 @@ fun AppNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = _root_ide_package_.com.example.carterinhadigital_evi.app.navigation.GraphRoutes.AUTH
+        startDestination = GraphRoutes.AUTH
     ) {
         authNavGraph(
             loginRepository = container.loginRepository,
             onLoginSucesso = { usuario ->
                 sessionViewModel.setUsuarioLogado(usuario)
                 replaceGraph(
-                    currentGraph = _root_ide_package_.com.example.carterinhadigital_evi.app.navigation.GraphRoutes.AUTH,
+                    currentGraph = GraphRoutes.AUTH,
                     destinationGraph = graphFor(usuario.perfil)
                 )
             }
@@ -75,44 +75,47 @@ fun AppNavHost(
             onLogout = {
                 sessionViewModel.limparSessao()
                 replaceGraph(
-                    currentGraph = _root_ide_package_.com.example.carterinhadigital_evi.app.navigation.GraphRoutes.ALUNO,
-                    destinationGraph = _root_ide_package_.com.example.carterinhadigital_evi.app.navigation.GraphRoutes.AUTH
+                    currentGraph = GraphRoutes.ALUNO,
+                    destinationGraph = GraphRoutes.AUTH
                 )
             },
             onSessaoAusente = {
                 replaceGraph(
-                    currentGraph = _root_ide_package_.com.example.carterinhadigital_evi.app.navigation.GraphRoutes.ALUNO,
-                    destinationGraph = _root_ide_package_.com.example.carterinhadigital_evi.app.navigation.GraphRoutes.AUTH
+                    currentGraph = GraphRoutes.ALUNO,
+                    destinationGraph = GraphRoutes.AUTH
                 )
             },
             onPerfilInvalido = { perfil ->
                 replaceGraph(
-                    currentGraph = _root_ide_package_.com.example.carterinhadigital_evi.app.navigation.GraphRoutes.ALUNO,
+                    currentGraph = GraphRoutes.ALUNO,
                     destinationGraph = graphFor(perfil)
                 )
             }
         )
 
         professorNavGraph(
+            navController = navController,
             usuarioLogadoFlow = sessionViewModel.usuarioLogado,
+            turmaRepository = container.turmaRepository,
+            unidadeCurricularProfessorRepository = container.unidadeCurricularProfessorRepository,
             darkTheme = darkTheme,
             onDarkThemeChange = onDarkThemeChange,
             onLogout = {
                 sessionViewModel.limparSessao()
                 replaceGraph(
-                    currentGraph = _root_ide_package_.com.example.carterinhadigital_evi.app.navigation.GraphRoutes.PROFESSOR,
-                    destinationGraph = _root_ide_package_.com.example.carterinhadigital_evi.app.navigation.GraphRoutes.AUTH
+                    currentGraph = GraphRoutes.PROFESSOR,
+                    destinationGraph = GraphRoutes.AUTH
                 )
             },
             onSessaoAusente = {
                 replaceGraph(
-                    currentGraph = _root_ide_package_.com.example.carterinhadigital_evi.app.navigation.GraphRoutes.PROFESSOR,
-                    destinationGraph = _root_ide_package_.com.example.carterinhadigital_evi.app.navigation.GraphRoutes.AUTH
+                    currentGraph = GraphRoutes.PROFESSOR,
+                    destinationGraph = GraphRoutes.AUTH
                 )
             },
             onPerfilInvalido = { perfil ->
                 replaceGraph(
-                    currentGraph = _root_ide_package_.com.example.carterinhadigital_evi.app.navigation.GraphRoutes.PROFESSOR,
+                    currentGraph = GraphRoutes.PROFESSOR,
                     destinationGraph = graphFor(perfil)
                 )
             }

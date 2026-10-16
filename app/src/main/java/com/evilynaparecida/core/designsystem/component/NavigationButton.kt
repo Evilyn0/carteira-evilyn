@@ -1,6 +1,5 @@
 package com.evilynaparecida.core.designsystem.component
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -23,13 +22,9 @@ fun NavigationButton(
         modifier = modifier.height(52.dp),
         onClick = onClick,
         shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(
-            width = 1.5.dp,
-            color = MaterialTheme.colorScheme.primary
-        ),
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onSurface
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
         )
     ) {
         Text(
